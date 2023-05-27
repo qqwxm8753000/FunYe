@@ -1,0 +1,35 @@
+name: 编译
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+    - name: 检出代码
+      uses: actions/checkout@v2
+
+    - name: 安装依赖
+      run: .\bin\install.bat
+
+    - name: 执行编译
+      run: .\bin\make.bat
+    - name: 设置 Python 3.7
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.7
+
+    - name: 压缩生成的文件
+      run: |
+        zip -r my-app-files.zip *
+      working-directory: path/to/your/files
+
+    - name: 保存所有生成文件
+      uses: actions/upload-artifact@v2
+      with:
+        name: my-app-files
+        path: my-app-files.zip
